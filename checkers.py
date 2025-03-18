@@ -679,12 +679,10 @@ if __name__ == '__main__':
     # get initial board state
     initial_board = get_initial_board(args.inputfile)
     state = State(initial_board)
-    turn = 'r'
-    ctr = 10
 
     # output the results in another file
     with open(args.outputfile, 'w') as sys.stdout:
         state.display()
-        result, val = alphabeta(state, float('-inf'), float('inf'), ctr, turn)
+        result, val = alphabeta(state, float('-inf'), float('inf'), 10, 'r')
         if result:
             print_result(result)
