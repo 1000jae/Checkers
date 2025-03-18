@@ -1,5 +1,4 @@
 # Checkers
-CSC384 A2: Game Tree Search
 
 Goal: Find the best result for the red players using Alpha-Beta Pruning.
 
