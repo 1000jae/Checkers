@@ -77,4 +77,4 @@ Output:<br />
 
 
 Command
-    python3 checkers.py --inputfile inputs/<input file> --outputfile outputs/<output file>
+    python3 checkers.py --inputfile <input file> --outputfile <output file>
