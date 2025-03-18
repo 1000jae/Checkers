@@ -2,20 +2,17 @@
 
 Goal: Find the best result for the red players using Alpha-Beta Pruning.
 
+Pieces:
+- "R" or "B": king pieces (move all directions)
+- "r" or "b": single pieces (move forward only)
 
-Pieces
-- "R" or "B": king pieces
-- "r" or "b": single pieces
-
-Rules
+Rules:
 1. Red starts at the bottom three rows and Balck starts at top three rows. 
-2. Movements: simple move or jump
-    - Simple Move: move piece one square diagonally to adjacent unoccupied space. King pieces can move in all different directions. Single pieces can only move forward. 
-    - Jump: move piece diagonally adjacent to an opponent's piece to an empty square immediately beyond it in the same direction. King pieces can move in all different directions. Single pieces can only move forward. A jumped piece is "captured" an removed from the board. 
-3. Jumping is mandatory. Jumping is prioritized over Simple moves. 
+2. Movements: simple move (move piece one square diagonally) or jump (move diagonally over an opponent's piece to "capture"/remove it)
+3. Jumping is mandatory and prioritized over Simple moves. 
 4. Multiple Jumps are done if possible. 
 5. If a piece reaches the other end of the board, the piece becomes a King piece.
-6. Player wins if the they capture all of the opponent's pieces or if the opponent is not able to make any legal moves. 
+6. Player wins if all of the opponent's pieces are captured or if the opponent is not able to make any legal moves.
 
 
 Input: each input is a state of an 8x8 board (64 characters). 
@@ -23,58 +20,7 @@ Input: each input is a state of an 8x8 board (64 characters).
 - "b" or "r": single piece
 - "B" or "R": king piece
 
+Output: all of the checkers board states for each move created as the two players play optimally. 
 
-Output: all of the moves it takes for the red player to win. 
-
-Example
-Input:<br />
-........<br />
-........<br />
-........<br />
-........<br />
-...b....<br />
-........<br />
-........<br />
-....r...<br />
-
-Output:<br />
-........<br />
-........<br />
-........<br />
-........<br />
-...b....<br />
-........<br />
-........<br />
-....r...<br />
-
-........<br />
-........<br />
-........<br />
-........<br />
-...b....<br />
-........<br />
-.....r..<br />
-........<br />
-
-........<br />
-........<br />
-........<br />
-........<br />
-........<br />
-....b...<br />
-.....r..<br />
-........<br />
-
-........<br />
-........<br />
-........<br />
-........<br />
-...r....<br />
-........<br />
-........<br />
-........<br />
-
-
-
-Command
+Command:
     python3 checkers.py --inputfile <input file> --outputfile <output file>
