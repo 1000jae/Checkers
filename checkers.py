@@ -1,50 +1,50 @@
 import argparse
-import copy
 import sys
-import time
-
-cache = {}  # you can use this to implement state caching
-
 
 class State:
-    # This class is used to represent a state.
-    # board : a list of lists that represents the 8*8 board
+    """
+    Represents a state 8x8 checkers board.
+    """
     def __init__(self, board):
+        # board: a list of lists that represents a 8x8 checkers board
+        # w: integer value representing the width of the board
+        # h: integer value representing the height of the board
+        # next: a pointer to the next board state
         self.next = None
         self.board = board
-        self.width = 8
-        self.height = 8
+        self.w = 8
+        self.h = 8
 
-    # function to display the board
+    # displays the board of the state
     def display(self):
         for i in self.board:
-            for j in i:
-                print(j, end="")
-            print("")
-        print("")
+            print(''.join(i))
+        print()
 
 
-def get_opp_char(player):
-    if player in ['b', 'B']:
+# gets the opponent's pieces
+def get_opp(player):
+    if player == 'b' or player == 'B':
         return ['r', 'R']
     else:
         return ['b', 'B']
 
-
-def get_next_turn(curr_turn):
-    if curr_turn == 'r':
+# gets the player to make move next
+def get_next(curr):
+    if curr == 'r':
         return 'b'
     else:
         return 'r'
 
-
-def read_from_file(filename):
-
-    f = open(filename)
-    lines = f.readlines()
-    board = [[str(x) for x in l.rstrip()] for l in lines]
-    f.close()
-
+# reads the input file and creates the initial board
+def get_initial_board(filename):
+    file = open(filename)
+    board = []
+    for l in file.readlines():
+        row = []
+        for i in l.strip():
+            row.append(i)
+        board.append(row)
     return board
 
 
@@ -54,15 +54,15 @@ def copy_board(state):
     """
     copy_board = []
     # make empty board
-    for j in range(state.height):
+    for j in range(state.h):
         row = []
-        for i in range(state.width):
+        for i in range(state.w):
             row.append('.')
         copy_board.append(row)
 
     # fill in the empty board with the same pieces as the given state
-    for j in range(state.height):
-        for i in range(state.width):
+    for j in range(state.h):
+        for i in range(state.w):
             if state.board[j][i] == 'r':
                 copy_board[j][i] = 'r'
             elif state.board[j][i] == 'R':
@@ -91,7 +91,7 @@ def change_normal_to_king(state):
     Crowns the normal pieces that can become king
     """
     # go through each space at the top and bottom of the board
-    for i in range(state.width):
+    for i in range(state.w):
         # if there is normal red piece at the top, crown it to king
         if state.board[0][i] == 'r':
             state.board[0][i] = 'R'
@@ -495,8 +495,8 @@ def get_factor_pieces(state):
     # index 0 = normal, index 1 = king
     red = [0, 0]
     black = [0, 0]
-    for j in range(state.height):
-        for i in range(state.width):
+    for j in range(state.h):
+        for i in range(state.w):
             if state.board[j][i] == 'r':
                 red[0] += 1
             elif state.board[j][i] == 'R':
@@ -517,7 +517,7 @@ def eval(state):
     # get number of kings and normal pieces each player has
     red, black = get_factor_pieces(state)
 
-    # weight: normal = 1, king = 4
+    # w: normal = 1, king = 4
     normal_score = (red[0] - black[0])
     estimate += normal_score
     king_score = 4 * (red[1] - black[1])
@@ -540,10 +540,10 @@ def get_succ(state, curr_turn):
     single = []
 
     # opposite player's pieces
-    opp = get_opp_char(curr_turn)
+    opp = get_opp(curr_turn)
 
-    for j in range(state.height):
-        for i in range(state.width):
+    for j in range(state.h):
+        for i in range(state.w):
             # if the piece is a normal piece
             if state.board[j][i] == curr_turn:
                 # if the current player is red
@@ -580,8 +580,8 @@ def get_num_pieces(state):
     """
     red_num = 0
     black_num = 0
-    for j in range(state.height):
-        for i in range(state.width):
+    for j in range(state.h):
+        for i in range(state.w):
             if state.board[j][i] in ['r', 'R']:
                 red_num += 1
             elif state.board[j][i] in ['b', 'B']:
@@ -623,7 +623,7 @@ def alphabeta(state, alpha, beta, depth, curr_turn):
     for succ in successors:
         # look through the successors of the current successor
         next_move, next_val = alphabeta(succ, alpha, beta, depth - 1,
-                                        get_next_turn(curr_turn))
+                                        get_next(curr_turn))
 
         # if the current player is the max player
         if curr_turn == 'r':
@@ -676,11 +676,13 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    initial_board = read_from_file(args.inputfile)
+    # get initial board state
+    initial_board = get_initial_board(args.inputfile)
     state = State(initial_board)
     turn = 'r'
     ctr = 10
 
+    # output the results in another file
     with open(args.outputfile, 'w') as sys.stdout:
         state.display()
         result, val = alphabeta(state, float('-inf'), float('inf'), ctr, turn)
