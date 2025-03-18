@@ -1,6 +1,7 @@
 class State:
     """
     Represents a state 8x8 checkers board.
+    The class was given by the instructor as source code for this assignment.
     """
     def __init__(self, board):
         # board: a list of lists that represents a 8x8 checkers board
