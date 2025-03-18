@@ -25,4 +25,4 @@ Input: each input is a state of an 8x8 board (64 characters).
 Output: all of the checkers board states for each move created as the two players play optimally. 
 
 Command:
-    python3 checkers.py --inputfile <input file> --outputfile <output file>
+    python3 checkers.py --inputfile input_file --outputfile output_file
