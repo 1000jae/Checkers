@@ -1,26 +1,6 @@
 import argparse
 import sys
-
-class State:
-    """
-    Represents a state 8x8 checkers board.
-    """
-    def __init__(self, board):
-        # board: a list of lists that represents a 8x8 checkers board
-        # w: integer value representing the width of the board
-        # h: integer value representing the height of the board
-        # next: a pointer to the next board state
-        self.next = None
-        self.board = board
-        self.w = 8
-        self.h = 8
-
-    # displays the board of the state
-    def display(self):
-        for i in self.board:
-            print(''.join(i))
-        print()
-
+from state import State
 
 # gets the opponent's pieces
 def get_opp(player):
