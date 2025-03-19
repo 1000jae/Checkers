@@ -1,6 +1,7 @@
 # Checkers
 
-Project for CSC384 on Game Tree Search.
+Project for CSC384 offered by University of Toronto Mississauga, Fall 2024.
+Tests, Source Code, and Description were given by the course.
 
 Goal: Find the best result for the red players using Alpha-Beta Pruning.
 
