@@ -1,30 +1,60 @@
 import argparse
 import sys
-from state import State
+
+class State:
+    """
+    Represents a state 8x8 checkers board.
+    This class was given as source code.
+    """
+    def __init__(self, board):
+        # board: a list of lists that represents a 8x8 checkers board
+        # weight: integer value representing the width of the board
+        # height: integer value representing the height of the board
+        # next: a pointer to the next board state
+        self.next = None
+        self.board = board
+        self.weight = 8
+        self.height = 8
+
+    # displays the board of the state
+    def display(self):
+        """
+        This function was given as source code.
+        """
+        for i in self.board:
+            print(''.join(i))
+        print()
+
 
 # gets the opponent's pieces
-def get_opp(player):
-    if player == 'b' or player == 'B':
+def get_opp_char(player):
+    """
+    This function was given as source code.
+    """
+    if player in ['b', 'B']:
         return ['r', 'R']
     else:
         return ['b', 'B']
 
 # gets the player to make move next
-def get_next(curr):
-    if curr == 'r':
+def get_next_turn(curr_turn):
+    """
+    This function was given as source code.
+    """
+    if curr_turn == 'r':
         return 'b'
     else:
         return 'r'
 
 # reads the input file and creates the initial board
-def get_initial_board(filename):
-    file = open(filename)
-    board = []
-    for l in file.readlines():
-        row = []
-        for i in l.strip():
-            row.append(i)
-        board.append(row)
+def read_from_file(filename):
+    """
+    This function was given as source code.
+    """
+    f = open(filename)
+    lines = f.readlines()
+    board = [[str(x) for x in l.rstrip()] for l in lines]
+    f.close()
     return board
 
 
@@ -34,15 +64,15 @@ def copy_board(state):
     """
     copy_board = []
     # make empty board
-    for j in range(state.h):
+    for j in range(state.height):
         row = []
-        for i in range(state.w):
+        for i in range(state.weight):
             row.append('.')
         copy_board.append(row)
 
     # fill in the empty board with the same pieces as the given state
-    for j in range(state.h):
-        for i in range(state.w):
+    for j in range(state.height):
+        for i in range(state.weight):
             if state.board[j][i] == 'r':
                 copy_board[j][i] = 'r'
             elif state.board[j][i] == 'R':
@@ -71,7 +101,7 @@ def change_normal_to_king(state):
     Crowns the normal pieces that can become king
     """
     # go through each space at the top and bottom of the board
-    for i in range(state.w):
+    for i in range(state.weight):
         # if there is normal red piece at the top, crown it to king
         if state.board[0][i] == 'r':
             state.board[0][i] = 'R'
@@ -475,8 +505,8 @@ def get_factor_pieces(state):
     # index 0 = normal, index 1 = king
     red = [0, 0]
     black = [0, 0]
-    for j in range(state.h):
-        for i in range(state.w):
+    for j in range(state.height):
+        for i in range(state.weight):
             if state.board[j][i] == 'r':
                 red[0] += 1
             elif state.board[j][i] == 'R':
@@ -520,10 +550,10 @@ def get_succ(state, curr_turn):
     single = []
 
     # opposite player's pieces
-    opp = get_opp(curr_turn)
+    opp = get_opp_char(curr_turn)
 
-    for j in range(state.h):
-        for i in range(state.w):
+    for j in range(state.height):
+        for i in range(state.weight):
             # if the piece is a normal piece
             if state.board[j][i] == curr_turn:
                 # if the current player is red
@@ -560,8 +590,8 @@ def get_num_pieces(state):
     """
     red_num = 0
     black_num = 0
-    for j in range(state.h):
-        for i in range(state.w):
+    for j in range(state.height):
+        for i in range(state.weight):
             if state.board[j][i] in ['r', 'R']:
                 red_num += 1
             elif state.board[j][i] in ['b', 'B']:
@@ -603,7 +633,7 @@ def alphabeta(state, alpha, beta, depth, curr_turn):
     for succ in successors:
         # look through the successors of the current successor
         next_move, next_val = alphabeta(succ, alpha, beta, depth - 1,
-                                        get_next(curr_turn))
+                                        get_next_turn(curr_turn))
 
         # if the current player is the max player
         if curr_turn == 'r':
@@ -640,7 +670,7 @@ def print_result(state):
 
 
 if __name__ == '__main__':
-
+    # parser code was given as source code. 
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--inputfile",
@@ -657,7 +687,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # get initial board state
-    initial_board = get_initial_board(args.inputfile)
+    initial_board = read_from_file(args.inputfile)
     state = State(initial_board)
 
     # output the results in another file
